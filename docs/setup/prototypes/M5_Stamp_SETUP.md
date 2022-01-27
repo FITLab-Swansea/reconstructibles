@@ -2,6 +2,8 @@
 
 Follow these instructions for setting up the M5 Stamp boards for prototype development.
 
+**NOTICE: This guide is incomplete. The ReConstructibles project transitioned to using TinyPICO boards from M5 Stamps.**
+
 ## Steps
 Download the USB-TTL driver from [this link](https://docs.m5stack.com/en/quick_start/stamp_pico/arduino). 
 The downloader that came with the STAMP-PICO kit is CH9102.
