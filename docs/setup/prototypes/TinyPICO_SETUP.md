@@ -2,7 +2,8 @@
 
 Follow these instructions for setting up the TinyPICO boards and 1.3" TFT displays for prototype development.
 
-__[[TOC]]__
+These instructions are based on the following guides:
+- [Adafruit 1.3" Display Arduino Wiring and Test](https://learn.adafruit.com/adafruit-1-3-and-1-54-240-x-240-wide-angle-tft-lcd-displays/arduino-wiring-test)
 
 ## Breadboard Setup
 Connect the following pins on the 1.3" display to the TinyPico's SPI interface:
