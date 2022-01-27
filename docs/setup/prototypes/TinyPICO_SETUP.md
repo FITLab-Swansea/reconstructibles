@@ -55,5 +55,5 @@ Connect the following pins on the 1.3" display to the TinyPico's SPI interface:
             - This might install automatically as a dependency of the SPIFlash library
         1. "Adafruit NeoPixel" by Adafruit (v1.10.3)
             - This might install automatically as a dependency of the SPIFlash library
-1. Open and run the [`graphicstest`](./tests/graphicstest/graphicstest.ino) example sketch located in the [`./tests/` folder](./tests/).
+1. Open and run the [`graphicstest`](/tests/graphicstest/graphicstest.ino) example sketch located in the [`/tests/` folder](/tests/).
     - This is the `graphicstest` provided by the Adafruit ST7735 and ST7789 Library (File > Examples > Adafruit ST7735 and ST7789 Library > graphicstest) with modifications to run correctly with the TinyPICO setup described above.
