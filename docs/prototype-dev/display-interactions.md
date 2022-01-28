@@ -10,3 +10,7 @@ TODO: explore each of these in-depth
 - Displaying information
 - Responding to touch events
 - Touch-only controls
+
+## Scrolling Text Test
+- Install Adafruit TouchScreen Library by Adafruit (v1.1.3)
+- Open `information-display-test` sketch
