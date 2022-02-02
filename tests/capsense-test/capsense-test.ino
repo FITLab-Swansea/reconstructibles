@@ -1,23 +1,19 @@
-#define OUT 33
-#define IN 32
+#include "CapSensor.h"
 
-void setup() {
-  pinMode(OUT, OUTPUT);
-  pinMode(IN, INPUT);
+CapSensor cs_33_32 = CapSensor(33, 32);
 
+void setup()
+{
   Serial.begin(9600);
 }
 
-void loop() {
+void loop()
+{
+  long start = millis();
+  long total = cs_33_32.capSensor(30);
+  Serial.print(millis() - start);
+  Serial.print("\t");
+  Serial.println(total);
 
-  digitalWrite(OUT, LOW);
   delay(10);
-
-  long startTime = micros();
-
-  digitalWrite(OUT, HIGH);
-  while(digitalRead(IN) == LOW);
-  long senseVal = micros() - startTime;
-  Serial.println(senseVal);
-
 }
