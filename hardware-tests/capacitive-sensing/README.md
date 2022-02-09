@@ -19,10 +19,10 @@ At the end of the document, we describe what we learned from testing the sensor.
 
 ## Setup 
 
-![Capsense Test Schematic](./assets/capsense-test-schematic.jpeg)
-
-Wire up the TinyPICO, resistor, and tin foil on the breadboard according to the above schematic.
+Wire up the TinyPICO, resistor, and tin foil on the breadboard according to the following schematic.
 Use alligator clips to connect the tin foil to the circuit for a better connection.
+
+![Capsense Test Schematic](./assets/capsense-test-schematic.jpeg)
 
 ## Procedure
 - Compile [`capsense-test.ino`](./capsense-test/capsense-test.ino) and upload to the TinyPICO
