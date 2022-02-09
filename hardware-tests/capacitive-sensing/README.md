@@ -37,9 +37,9 @@ Use alligator clips to connect the tin foil to the circuit for a better connecti
 Capacitive sensitivity and sensor latency is determined by the resistor value and surface area of the tin foil pad.
 Low resistance or small surface area results in lower sensitivity and lower latency.
 
-    - Ex: With 1 Mohm resistor, sensor detects only direct contact and responds quickly
+- Ex: With 1 Mohm resistor, sensor detects only direct contact and responds quickly
 
 High resistance or large surface area results in higher sensitivity and higher latency.
 
-    - Ex: With 20 Mohm resistor, sensor detects proximity within a few cm, not just direct contact, but has slower response than 1 Mohm
+- Ex: With 20 Mohm resistor, sensor detects proximity within a few cm, not just direct contact, but has slower response than 1 Mohm
 
