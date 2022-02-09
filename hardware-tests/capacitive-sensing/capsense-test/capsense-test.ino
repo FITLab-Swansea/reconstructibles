@@ -2,8 +2,11 @@
 #include "CapSensor.h"
 
 // Initialize the capacitive sensor
+// - resistor is connected between pins 33 and 32
+// - tin foil is connected to pin 32 (receivePin)
 CapSensor cs_33_32 = CapSensor(33, 32);
-CapSensor cs_21_22 = CapSensor(21, 22);
+
+#define NUM_SAMPLES 30
 
 void setup()
 {
@@ -13,16 +16,15 @@ void setup()
 void loop()
 {
   long start = millis();
-  long total1 = cs_33_32.capSensor(30);
-  long total2 = cs_21_22.capSensor(30);
+
+  // Read the sensor NUM_SAMPLES times
+  long total = cs_33_32.readSensor(NUM_SAMPLES);
+
+  // Print elapsed time
   Serial.print(millis() - start);
-  Serial.print("\t1: ");
-  Serial.print(total1);
-  if (total1 - 10000 <= 0) {
-    Serial.print("\t");
-  }
-  Serial.print("\t2: ");
-  Serial.println(total2);
+  // Print sensor value
+  Serial.print("\t");
+  Serial.println(total);
 
   delay(10);
 }
