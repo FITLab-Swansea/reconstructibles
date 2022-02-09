@@ -8,6 +8,8 @@ This documents outlines the procedure for building a capacitive sensor using tin
 The sensor can be adjusted to detect direct touch contact or proximity.
 At the end of the document, we describe what we learned from testing the sensor.
 
+Set up the [TinyPico](/docs/setup/hardware/TinyPICO_SETUP.md) before running these tests.
+
 ## Materials Needed
 
 - TinyPICO control board
