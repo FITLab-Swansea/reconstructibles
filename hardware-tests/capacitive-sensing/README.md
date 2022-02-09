@@ -6,7 +6,7 @@ Capacitive sensing is commonly used in multi-touch displays, such as smartphones
 
 This documents outlines the procedure for building a capacitive sensor using tin foil.
 The sensor can be adjusted to detect direct touch contact or proximity.
-We then describe what we learned from testing the sensor.
+At the end of the document, we describe what we learned from testing the sensor.
 
 ## Materials Needed
 
@@ -19,7 +19,7 @@ We then describe what we learned from testing the sensor.
 
 ## Setup 
 
-![Capsense Test Schematic](./assets/capsense-test-schematic.pdf)
+![Capsense Test Schematic](./assets/capsense-test-schematic.jpeg)
 
 Wire up the TinyPICO, resistor, and tin foil on the breadboard according to the above schematic.
 Use alligator clips to connect the tin foil to the circuit for a better connection.
@@ -30,7 +30,7 @@ Use alligator clips to connect the tin foil to the circuit for a better connecti
 - The stream of numbers in the console represent the value of the sensor
 - Touching the tin foil pad will cause the sensor value to spike
 - Test each resistor value and explore how the sensor detects direct contact and proximity
-- Test various 
+- Test various tin foil sheet sizes to explore how that changes sensitivity and latency
 
 ## Results
 
