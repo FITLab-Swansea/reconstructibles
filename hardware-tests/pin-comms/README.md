@@ -1,5 +1,7 @@
 # Pin-Based Communication
 
+
+
 ## UART Test
 ### Setup
 - Connect TinyPICO to computer via MicroUSB cables
