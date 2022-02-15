@@ -6,6 +6,8 @@
 
 // System constants
 #define DEBUG_ON 1
+#define THIS_COLOR ST77XX_RED
+#define OTHER_COLOR ST77XX_BLUE
 
 // Debug Mode for Printing to Serial Console
 #define ENABLE_DEBUG true
@@ -168,11 +170,11 @@ void drawTableHeader()
   tft.setTextSize(TABLE_HEADER_TEXT_SIZE);
   // - Me
   tft.setCursor(TFT_WIDTH/6,TFT_HEIGHT/9);
-  tft.setTextColor(ST77XX_RED, ST77XX_BLACK);
+  tft.setTextColor(THIS_COLOR, ST77XX_BLACK);
   tft.print("ME");
   // - Them
   tft.setCursor(5*TFT_WIDTH/9,TFT_HEIGHT/9);
-  tft.setTextColor(ST77XX_BLUE, ST77XX_BLACK);
+  tft.setTextColor(OTHER_COLOR, ST77XX_BLACK);
   tft.print("THEM");
 }
 
@@ -205,7 +207,7 @@ void drawMyCount()
     tft.setCursor(10, TFT_HEIGHT/2);
   }
   
-  tft.setTextColor(ST77XX_RED, ST77XX_BLACK);
+  tft.setTextColor(THIS_COLOR, ST77XX_BLACK);
   tft.print(thisNumPresses);
 }
 
@@ -227,6 +229,6 @@ void drawOtherCount()
     tft.setCursor(TFT_WIDTH/2+10,TFT_HEIGHT/2);  
   }
   
-  tft.setTextColor(ST77XX_BLUE, ST77XX_BLACK);
+  tft.setTextColor(OTHER_COLOR, ST77XX_BLACK);
   tft.print(otherNumPresses);
 }
