@@ -10,7 +10,6 @@
 
 // ReConstructibles Libraries
 #include "R_CapacitiveSensing.h"  // Capacitive sensing library
-#include "R_Debug.h"              // Debug helper library
 
 // Display Constants
 #define TFT_CS    5  // Chip select pin = SS on TinyPico
