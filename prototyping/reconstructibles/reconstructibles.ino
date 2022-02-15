@@ -6,7 +6,6 @@
 
 // System constants
 #define DEBUG_ON 1
-#define NUM_CAP_SENSE_SAMPLES 30
 
 // Debug Mode for Printing to Serial Console
 #define ENABLE_DEBUG true
@@ -35,7 +34,7 @@ CapSensor cs_33_32 = CapSensor(33,32);
 void setup() 
 {
   // Initialize debug system
-  debug_begin(9600);
+  debug_begin(19200);
   
   // Initialize variables
   thisNumPresses = 0;
@@ -52,19 +51,19 @@ void setup()
   debug_println("\nInitializing capacitive sensor...");
   hasContact = false;
   
-  // TODO: Set up serial connection
+  // Set up serial connection
+  Serial2.begin(UART_COMM_BAUD, SERIAL_8N1, RX0, TX0);
 }
 
 #define TOUCH_THRESHOLD 10000
 
 void loop() 
 {
+  // Loop checking for touch and signals from other device simultaneously
   
-  // TODO: Listen for other device and touch simultaneously
-  // Check for touch
+  // 1. Check for touch
   long cs_33_32_reading = cs_33_32.readSensor(NUM_CAP_SENSE_SAMPLES);
-//  debug_print("CS: ");
-//  debug_println(cs_33_32_reading);
+
   // TODO: This is a bit buggy, sometimes doesn't register touches with tin foil and alligator clip
   if ((cs_33_32_reading > TOUCH_THRESHOLD) && (!hasContact))
   {
@@ -73,19 +72,43 @@ void loop()
       // Update display on touch
       incThisNumPresses();
       drawTableBody();
+      // Signal other device
+      signalTouchEvent();
   } else if ((cs_33_32_reading < TOUCH_THRESHOLD) && (hasContact)) {
       debug_println(F("released"));
       hasContact = false;
   }
-  // TODO: If touched, signal other device
-  
-  // TODO: If data received, update display
+
+  // 2. Check for serial signal from other device
+  if (Serial2.available())
+  {
+    debug_println(F("-- touched other --"));
+    if (1 == Serial2.read())
+    {
+      // If touch event received, update display
+      incOtherNumPresses();
+      drawTableBody();
+    }
+  }
 
   // TODO: Randomly disconnect Serial (indicate separation)
   // TODO: Reconnect
 
   delay(10);
 }
+
+// *****************************
+// Communication Functions
+// *****************************
+void signalTouchEvent()
+{
+  Serial2.write(1);
+  Serial2.flush();
+}
+
+// *****************************
+// Data Functions
+// *****************************
 
 // Increment num presses for this device
 // - Rollover at 99 to avoid printing three digits
@@ -111,7 +134,10 @@ void incOtherNumPresses()
   }
 }
 
+// *****************************
 // Display Functions
+// *****************************
+
 void clearDisplay() 
 {
   tft.fillScreen(ST77XX_BLACK);

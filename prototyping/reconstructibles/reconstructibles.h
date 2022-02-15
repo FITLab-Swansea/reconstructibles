@@ -20,3 +20,11 @@
 
 #define TFT_WIDTH 240
 #define TFT_HEIGHT 240
+
+// Capacitive Sensing Constants
+#define NUM_CAP_SENSE_SAMPLES 30
+
+// UART Constants
+#define RX0 14
+#define TX0 15
+#define UART_COMM_BAUD 9600
