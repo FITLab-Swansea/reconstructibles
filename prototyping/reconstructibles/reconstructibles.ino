@@ -25,6 +25,8 @@
 uint8_t thisNumPresses;
 uint8_t otherNumPresses;
 bool hasContact;
+bool thisNumRollover;
+bool otherNumRollover;
 
 // System hardware
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
@@ -38,6 +40,8 @@ void setup()
   // Initialize variables
   thisNumPresses = 0;
   otherNumPresses = 0;
+  thisNumRollover = false;
+  otherNumRollover = false;
   
   // Set up display
   debug_println("\nInitializing TFT display...");
@@ -56,18 +60,18 @@ void setup()
 void loop() 
 {
   
-  // TODO: Check for touch and listen for other device
+  // TODO: Listen for other device and touch simultaneously
   // Check for touch
   long cs_33_32_reading = cs_33_32.readSensor(NUM_CAP_SENSE_SAMPLES);
 //  debug_print("CS: ");
 //  debug_println(cs_33_32_reading);
-  // TODO: This is a bit buggy, sometimes doesn't register touches
+  // TODO: This is a bit buggy, sometimes doesn't register touches with tin foil and alligator clip
   if ((cs_33_32_reading > TOUCH_THRESHOLD) && (!hasContact))
   {
       debug_println(F("CONTACT!"));
       hasContact = true;
       // Update display on touch
-      thisNumPresses++;
+      incThisNumPresses();
       drawTableBody();
   } else if ((cs_33_32_reading < TOUCH_THRESHOLD) && (hasContact)) {
       debug_println(F("released"));
@@ -81,6 +85,30 @@ void loop()
   // TODO: Reconnect
 
   delay(10);
+}
+
+// Increment num presses for this device
+// - Rollover at 99 to avoid printing three digits
+void incThisNumPresses()
+{
+  thisNumPresses++;
+  if (thisNumPresses > 99)
+  {
+    thisNumPresses = 0;
+    thisNumRollover = true;
+  }
+}
+
+// Increment num presses for other device
+// - Rollover at 99 to avoid printing three digits
+void incOtherNumPresses()
+{
+  otherNumPresses++;
+  if (otherNumPresses > 99)
+  {
+    otherNumPresses = 0;
+    otherNumRollover = true;
+  }
 }
 
 // Display Functions
@@ -128,7 +156,6 @@ void drawTableHeader()
 void drawTableBody() 
 {
     // TODO: setTextSize should be inside each draw function, but without repeating work
-    // TODO: Adjust for double-digits, roll-over before three digits
     tft.setTextSize(TABLE_BODY_TEXT_SIZE); 
     drawMyCount();
     drawOtherCount();
@@ -137,7 +164,21 @@ void drawTableBody()
 // Print press count of this device
 void drawMyCount() 
 {
-  tft.setCursor(TFT_WIDTH/6,TFT_HEIGHT/2); 
+  // Clear table cell if num rolls over
+  if (thisNumRollover)
+  {
+    tft.fillRect(10, TFT_HEIGHT/2, 100, 63, ST77XX_BLACK); 
+    thisNumRollover = false;
+  }
+  // Adjust for double-digits
+  if (thisNumPresses < 10)
+  {
+    tft.setCursor(TFT_WIDTH/6,TFT_HEIGHT/2);   
+  } else 
+  {
+    tft.setCursor(10, TFT_HEIGHT/2);
+  }
+  
   tft.setTextColor(ST77XX_RED, ST77XX_BLACK);
   tft.print(thisNumPresses);
 }
@@ -145,7 +186,21 @@ void drawMyCount()
 // Print press count of other device
 void drawOtherCount() 
 {
-  tft.setCursor(2*TFT_WIDTH/3,TFT_HEIGHT/2);
+  // Clear table cell if num rolls over
+  if (otherNumRollover)
+  {
+    tft.fillRect(130, TFT_HEIGHT/2, 100, 63, ST77XX_BLACK); 
+    otherNumRollover = false;
+  }
+  // Adjust for double-digits
+  if (otherNumPresses < 10)
+  {
+    tft.setCursor(2*TFT_WIDTH/3,TFT_HEIGHT/2);  
+  } else
+  {
+    tft.setCursor(TFT_WIDTH/2+10,TFT_HEIGHT/2);  
+  }
+  
   tft.setTextColor(ST77XX_BLUE, ST77XX_BLACK);
   tft.print(otherNumPresses);
 }
