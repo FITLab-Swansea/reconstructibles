@@ -57,6 +57,7 @@ void setup()
   Serial2.begin(UART_COMM_BAUD, SERIAL_8N1, RX0, TX0);
 }
 
+// TODO: threshold should be calibrated, not hard-coded
 #define TOUCH_THRESHOLD 10000
 
 void loop() 
@@ -66,7 +67,7 @@ void loop()
   // 1. Check for touch
   long cs_33_32_reading = cs_33_32.readSensor(NUM_CAP_SENSE_SAMPLES);
 
-  // TODO: This is a bit buggy, sometimes doesn't register touches with tin foil and alligator clip
+  // TODO: This is a bit buggy with alligator clip (doesn't always register touches)
   if ((cs_33_32_reading > TOUCH_THRESHOLD) && (!hasContact))
   {
       debug_println(F("CONTACT!"));
