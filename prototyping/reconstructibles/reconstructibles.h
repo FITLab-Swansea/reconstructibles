@@ -29,7 +29,3 @@
 #define RX0 14
 #define TX0 15
 #define UART_COMM_BAUD 9600
-
-// Bluetooth Constants
-#define D1_MAC_ADDR "24:A1:60:74:E1:14" // D1 connected on cu.usbserial-020D10F5
-#define D2_MAC_ADDR "24:A1:60:74:E0:FC" // D2 connected on cu.usbserial-020D0A70
