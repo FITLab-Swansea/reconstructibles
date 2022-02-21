@@ -28,52 +28,6 @@ bool hasContact;
 bool thisNumRollover;
 bool otherNumRollover;
 
-
-// *****************************
-// TEMP Bluetooth
-// *****************************
-// Uncomment address of receiver
-//#define BROADCAST_ADDR d1_broadcastAddress
-#define BROADCAST_ADDR d2_broadcastAddress
-
-// Variable to store incoming num presses
-uint8_t incomingNumPresses;
-// Variable to store if sending data was successful
-String success;
-
-// struct to hold message
-typedef struct struct_message {
-  uint8_t presses;
-} struct_message;
-// struct to store readings
-struct_message thisReadings;
-// struct to store incoming readings
-struct_message incomingReadings;
-
-// Callback when data is sent
-void OnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) {
-  Serial.print("\r\nLast Packet Send Status:\t");
-  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
-  if (status ==0){
-    success = "Delivery Success :)";
-  }
-  else{
-    success = "Delivery Fail :(";
-  }
-}
-
-// Callback when data is received
-void OnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len) {
-  memcpy(&incomingReadings, incomingData, sizeof(incomingReadings));
-  Serial.print("Bytes received: ");
-  Serial.println(len);
-  otherNumPresses = incomingReadings.presses;
-  drawTableBody();
-}
-// *****************************
-// END TEMP
-// *****************************
-
 // System hardware
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RST);
 CapSensor cs_33_32 = CapSensor(33,32);
@@ -101,39 +55,8 @@ void setup()
   // Set up serial connection
   Serial2.begin(UART_COMM_BAUD, SERIAL_8N1, RX0, TX0);
 
-  // *****************************
-  // TEMP SETUP
-  // *****************************
-  WiFi.mode(WIFI_STA);
-  if (esp_now_init() != ESP_OK)
-  {
-    Serial.println("Error initializing ESP-NOW");
-    return;
-  }
-
-  // Once ESP-NOW is successfully initialized, register send callback to
-  // get the status of transmitted packet
-  esp_now_register_send_cb(OnDataSent);
-
-  // Register ESP-NOW peer
-  esp_now_peer_info_t peerInfo;
-  // TODO: change broadchast address to receiver address
-  memcpy(peerInfo.peer_addr, BROADCAST_ADDR, 6);
-  peerInfo.channel = 0;  
-  peerInfo.encrypt = false;
-  
-  // Add ESP-NOW peer  
-  // -       
-  if (esp_now_add_peer(&peerInfo) != ESP_OK){
-    Serial.println("Failed to add peer");
-    return;
-  }
-  
-  // Register data received callback function
-  esp_now_register_recv_cb(OnDataRecv);
-  // *****************************
-  // END TEMP SETUP
-  // *****************************
+  // Set up Bluetooth manager
+  rbt_start();
 }
 
 // TODO: threshold should be calibrated, not hard-coded
@@ -161,6 +84,12 @@ void loop()
       hasContact = false;
   }
 
+  if (incomingNumPresses != otherNumPresses)
+  {
+    otherNumPresses = incomingNumPresses;
+    drawTableBody();
+  }
+
   // 2. Check for serial signal from other device
 //  if (Serial2.available())
 //  {
@@ -186,21 +115,7 @@ void signalTouchEvent()
 {
 //  Serial2.write(1);
 //  Serial2.flush();
-  // *****************************
-  // TEMP WIRELESS COMMS
-  // *****************************
-  thisReadings.presses = thisNumPresses;
-  esp_err_t result = esp_now_send(BROADCAST_ADDR, (uint8_t *) &thisReadings, sizeof(thisReadings));
-   
-  if (result == ESP_OK) {
-    Serial.println("Sent with success");
-  }
-  else {
-    Serial.println("Error sending the data");
-  }
-  // *****************************
-  // END TEMP WIRELESS COMMS
-  // *****************************
+  rbt_sendData(thisNumPresses);
 }
 
 // *****************************
@@ -228,6 +143,70 @@ void incOtherNumPresses()
   {
     otherNumPresses = 0;
     otherNumRollover = true;
+  }
+}
+
+// *****************************
+// Bluetooth Functions
+// *****************************
+
+// Callback when data is sent
+void rbt_cbOnDataSent(const uint8_t *mac_addr, esp_now_send_status_t status) 
+{
+  Serial.print("\r\nLast Packet Send Status:\t");
+  Serial.println(status == ESP_NOW_SEND_SUCCESS ? "Delivery Success" : "Delivery Fail");
+}
+
+// Callback when data is received
+void rbt_cbOnDataRecv(const uint8_t * mac, const uint8_t *incomingData, int len)
+{
+  memcpy(&incomingDataPacket, incomingData, sizeof(incomingDataPacket));
+  Serial.print("Bytes received: ");
+  Serial.println(len);
+  incomingNumPresses = incomingDataPacket.num_presses;
+}
+
+void rbt_start()
+{
+  // Initialize data
+  incomingNumPresses = 0;
+  
+  // Initialize WiFi and ESP-NOW hardware
+  WiFi.mode(WIFI_STA);
+  if (esp_now_init() != ESP_OK)
+  {
+    Serial.println("Error initializing ESP-NOW");
+    return;
+  }
+  // Register send data callback
+  esp_now_register_send_cb(rbt_cbOnDataSent);
+
+  // Receiver device must be set as ESP-NOW peer to enable connection
+  // - Register receiver
+  memcpy(peerInfo.peer_addr, RECEIVER_ADDR, 6);
+  peerInfo.channel = 0;  
+  peerInfo.encrypt = false;
+  // - Add as peer  
+  if (esp_now_add_peer(&peerInfo) != ESP_OK){
+    Serial.println("Failed to add peer");
+    return;
+  }
+  
+  // Register data received callback
+  esp_now_register_recv_cb(rbt_cbOnDataRecv);
+}
+
+void rbt_sendData(uint8_t d)
+{
+  outgoingDataPacket.num_presses = d;
+  esp_err_t result = esp_now_send(RECEIVER_ADDR, (uint8_t *) &outgoingDataPacket, sizeof(outgoingDataPacket));
+   
+  if (result == ESP_OK) {
+    Serial.println("Sent with success");
+  }
+  else {
+    Serial.print(result);
+    Serial.println("Error sending the data"); 
   }
 }
 
