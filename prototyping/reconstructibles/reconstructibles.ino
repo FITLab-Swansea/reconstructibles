@@ -21,6 +21,9 @@
 #define debug_println(x)
 #endif
 
+// TODO: threshold should be calibrated, not hard-coded
+#define TOUCH_THRESHOLD 10000
+
 // System data
 uint8_t thisNumPresses;
 uint8_t otherNumPresses;
@@ -58,9 +61,6 @@ void setup()
   // Set up Bluetooth manager
   rbt_start();
 }
-
-// TODO: threshold should be calibrated, not hard-coded
-#define TOUCH_THRESHOLD 10000
 
 void loop() 
 {
