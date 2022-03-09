@@ -3,7 +3,7 @@
 Play demo video [here](./breadboard-touch-counter-demo.mp4)
 
 ## Video Transcript
-![Image of video demo](./breadboard-touch-count-demo.pdf)
+![Image of video demo](./breadboard-touch-count-demo.png)
 
 This is a demonstration of an example application running on two devices, with hardware wired into breadboards.
 The purpose of this demo is to show how all of the key hardware and software systems of ReConstructibles can be combined together, including the display, touch sensing, and wireless and wired communication mechanisms.
