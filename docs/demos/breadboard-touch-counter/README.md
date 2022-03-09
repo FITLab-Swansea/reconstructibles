@@ -1,6 +1,6 @@
 # Touch Counter Example Application w/ Breadboard
 
-Play demo video [here](./breadboard-touch-counter-demo.mp4)
+TODO: Add link to video
 
 ## Video Transcript
 (still image below)
